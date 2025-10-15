@@ -1,19 +1,23 @@
-
-// ext/trainer_ext.js — attach to existing 'game' screen without modifying its code
+// ext/trainer_ext.js
 import { t } from "../core/i18n.js";
 import { state } from "../core/state.js";
 import { mountTrainerUI } from "./trainer_logic.js";
-import "../trainer-ext.css";
 
-function tryMount(){
-  const game = document.querySelector(".game-screen .screen__body");
-  if (!game) return;
-  // If already mounted, skip
-  if (game.querySelector(".mws-trainer")) return;
-  mountTrainerUI(game);
-}
+// Ждём появления экрана игры (рендерится асинхронно)
+const waitForGameScreen = async () => {
+  for (let i = 0; i < 30; i++) {
+    const game = document.querySelector(".game-screen .screen__body");
+    if (game) return game;
+    await new Promise(r => setTimeout(r, 300));
+  }
+  console.warn("⚠️ Не найден .game-screen .screen__body — тренажёр не был смонтирован.");
+  return null;
+};
 
-const observer = new MutationObserver(() => tryMount());
-observer.observe(document.body, { childList: true, subtree: true });
-document.addEventListener("DOMContentLoaded", tryMount);
-window.addEventListener("load", tryMount);
+(async () => {
+  const game = await waitForGameScreen();
+  if (game) {
+    console.log("✅ Trainer extension initialized");
+    mountTrainerUI(game, { t, state });
+  }
+})();
