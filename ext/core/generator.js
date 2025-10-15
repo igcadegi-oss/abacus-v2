@@ -1,17 +1,17 @@
 // ext/core/generator.js
-export function generateExamples(count = 10) {
+export function generateExamples(count = 10, range = [1, 4]) {
   const examples = [];
-  let current = 0;
+  const [min, max] = range;
+
   for (let i = 0; i < count; i++) {
-    const delta = randomDelta();
+    const delta = randomDelta(min, max);
     const sign = delta > 0 ? "+" : "";
     examples.push(`${sign}${delta}`);
-    current += delta;
   }
   return examples;
 }
 
-function randomDelta() {
-  const vals = [-4, -3, -2, -1, 1, 2, 3, 4];
-  return vals[Math.floor(Math.random() * vals.length)];
+function randomDelta(min = 1, max = 4) {
+  const val = Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.random() < 0.5 ? -val : val;
 }
