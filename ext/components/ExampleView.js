@@ -9,19 +9,26 @@ export class ExampleView {
     this.container.innerHTML = examples
       .map(ex => `<div class='example-item'>${ex}</div>`)
       .join("");
-    this.adjustFont();
+    this.adjustFont(examples.length);
   }
 
-  adjustFont() {
+  adjustFont(lines = 10) {
     const items = this.container.querySelectorAll(".example-item");
     if (!items.length) return;
 
-    const maxHeight = window.innerHeight * 0.8;
-    const fontSize = Math.max(40, Math.min(140, maxHeight / (items.length + 1)));
+    const vh = window.innerHeight;
+    const fontSize = Math.min(
+      72,
+      Math.max(24, (vh * 0.75) / (Math.min(lines, 15) + 2))
+    );
+
     items.forEach(i => {
       i.style.fontSize = fontSize + "px";
       i.style.fontFamily = "'Baloo 2', cursive";
-      i.style.lineHeight = "1.1";
+      i.style.color = "#7d733a";
+      i.style.lineHeight = "1.15";
+      i.style.wordBreak = "keep-all";
+      i.style.overflowWrap = "anywhere";
     });
   }
 }
