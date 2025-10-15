@@ -3,25 +3,44 @@ import { t } from "../core/i18n.js";
 import { state } from "../core/state.js";
 import { mountTrainerUI } from "./trainer_logic.js";
 
-// === Основная инициализация тренажёра ===
-(async () => {
-  // Ищем главный контейнер приложения
-  const appRoot = document.getElementById("app");
-
-  if (!appRoot) {
-    console.error("❌ Не найден контейнер #app для тренажёра.");
-    return;
+/**
+ * Ждёт появления на странице экрана "Тренування" (.game-screen)
+ * и монтирует тренажёр только внутри него.
+ */
+const waitForGameScreen = async () => {
+  for (let i = 0; i < 40; i++) {
+    const gameScreen = document.querySelector(".game-screen .screen__body");
+    if (gameScreen) return gameScreen;
+    await new Promise(r => setTimeout(r, 250));
   }
+  console.warn("⚠️ Не найден .game-screen .screen__body — тренажёр не был смонтирован.");
+  return null;
+};
 
-  // Проверим, не был ли тренажёр уже смонтирован
-  if (appRoot.dataset.trainerMounted) {
-    console.warn("⚠️ Trainer уже инициализирован.");
-    return;
-  }
+/**
+ * Следит за навигацией внутри приложения.
+ * При каждом изменении URL или состояния проверяет, есть ли экран 'Тренування'.
+ */
+const observeNavigation = () => {
+  const observer = new MutationObserver(async () => {
+    const screen = await waitForGameScreen();
+    if (screen && !screen.dataset.trainerMounted) {
+      console.log("✅ TrainerView mounted on .game-screen");
+      screen.dataset.trainerMounted = "true";
+      mountTrainerUI(screen, { t, state });
+    }
+  });
 
-  console.log("✅ TrainerView initialized on #app");
-  appRoot.dataset.trainerMounted = "true";
+  observer.observe(document.body, { childList: true, subtree: true });
+  console.log("👀 Trainer observer started");
+};
 
-  // Монтируем тренировочный интерфейс
-  mountTrainerUI(appRoot, { t, state });
-})();
+/**
+ * Инициализация после загрузки DOM.
+ */
+document.addEventListener("DOMContentLoaded", () => {
+  // Проверяем, не загружен ли тренажёр раньше
+  if (window.__trainerObserverActive) return;
+  window.__trainerObserverActive = true;
+  observeNavigation();
+});
