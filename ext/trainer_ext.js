@@ -3,7 +3,6 @@ import { t } from "../core/i18n.js";
 import { state } from "../core/state.js";
 import { mountTrainerUI } from "./trainer_logic.js";
 
-// Ждём появления экрана игры (рендерится асинхронно)
 const waitForGameScreen = async () => {
   for (let i = 0; i < 30; i++) {
     const game = document.querySelector(".game-screen .screen__body");
@@ -17,7 +16,7 @@ const waitForGameScreen = async () => {
 (async () => {
   const game = await waitForGameScreen();
   if (game) {
-    console.log("✅ Trainer extension initialized");
+    console.log("✅ TrainerView initialized");
     mountTrainerUI(game, { t, state });
   }
 })();
