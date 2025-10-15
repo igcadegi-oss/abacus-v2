@@ -1,0 +1,149 @@
+
+/* trainer-ext.css — non-invasive additions */
+:root{
+  --gold: var(--color-muted);
+}
+/* Layout for trainer areas inside .game-screen */
+.mws-trainer {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 900px){
+  .mws-trainer { grid-template-columns: 1fr; }
+}
+
+/* Example area */
+#area-example {
+  background: var(--color-surface);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-soft);
+  padding: 20px 24px;
+  min-height: 280px;
+}
+.example--column {
+  display: grid;
+  grid-auto-rows: minmax(24px, auto);
+  row-gap: 8px;
+  align-content: start;
+}
+.example--inline {
+  font-size: clamp(18px, 3vw, 28px);
+  line-height: 1.35;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.example__line {
+  font-family: "Baloo 2", system-ui, sans-serif;
+  color: var(--gold);
+  /* font-size will be injected dynamically for column mode */
+}
+
+/* Right control panel */
+#panel-controls {
+  display: grid;
+  gap: 14px;
+}
+.panel-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-soft);
+  padding: 16px 18px;
+}
+#answer-input {
+  width: 100%;
+  font-size: 20px;
+  padding: 12px 14px;
+  border-radius: var(--radius-medium);
+  border: 1px solid rgba(125,115,58,0.25);
+}
+#btn-submit, #btn-abacus {
+  width: 100%;
+}
+.stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+}
+.progress {
+  height: 10px;
+  background: #eee;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress__bar {
+  height: 100%;
+  width: 0%;
+  background: var(--color-primary);
+  transition: width 200ms ease;
+}
+
+/* Red helper highlight for speed required */
+.field--error {
+  outline: 2px solid #d93025;
+  outline-offset: 2px;
+}
+
+/* Leo modal */
+.leo-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  z-index: 1000;
+}
+.leo-modal__card {
+  background: var(--color-surface);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-soft);
+  padding: 24px;
+  max-width: 520px;
+  margin: 16px;
+  text-align: center;
+}
+.leo-modal--open { display: flex; }
+.leo-modal__title { font-size: 22px; margin-bottom: 8px; }
+.leo-modal__text { font-size: 18px; }
+
+/* Simple abacus MVP */
+.abacus {
+  display: inline-grid;
+  grid-auto-flow: column;
+  gap: 24px;
+  padding: 16px;
+}
+.abacus__col {
+  position: relative;
+  width: 60px;
+  height: 240px;
+  background: linear-gradient(#f3e9da,#efe5d6);
+  border-radius: 16px;
+  box-shadow: var(--shadow-inset);
+  padding: 8px 12px;
+}
+.abacus__bar {
+  position: absolute; left: 10px; right: 10px; top: 40%;
+  height: 6px; background: #c0a67f; border-radius: 3px;
+}
+.bead {
+  position: absolute;
+  left: 12px; right: 12px;
+  height: 28px;
+  border-radius: 999px; box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  cursor: pointer; user-select: none;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600;
+  background: #ffcc66;
+}
+.bead--upper { top: 10px; }
+.bead--lower { bottom: 10px; }
+.bead--l1 { bottom: 10px; }
+.bead--l2 { bottom: 44px; }
+.bead--l3 { bottom: 78px; }
+.bead--l4 { bottom: 112px; }
+.bead--engaged { background: #f2b64d; transform: translateY(-18px); }
+.bead--upper.bead--engaged { transform: translateY(60px); }
